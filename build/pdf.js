@@ -3773,7 +3773,7 @@ function isValidFetchUrl(url, baseUrl) {
     const {
       protocol
     } = baseUrl ? new URL(url, baseUrl) : new URL(url);
-    return protocol === "http:" || protocol === "https:";
+    return protocol === "http:" || protocol === "https:" || protocol === "r2http:";
   } catch (ex) {
     return false;
   }
@@ -13998,7 +13998,7 @@ class PDFNodeStream {
   constructor(source) {
     this.source = source;
     this.url = parseUrl(source.url);
-    this.isHttp = this.url.protocol === "http:" || this.url.protocol === "https:";
+    this.isHttp = this.url.protocol === "http:" || this.url.protocol === "https:" || this.url.protocol === "r2http:";
     this.isFsUrl = this.url.protocol === "file:";
     this.httpHeaders = this.isHttp && source.httpHeaders || {};
     this._fullRequestReader = null;
@@ -14305,7 +14305,7 @@ class PDFNodeStreamFullReader extends BaseFullReader {
 
     this._request = null;
 
-    if (this._url.protocol === "http:") {
+    if (this._url.protocol !== "https:") {
       this._request = http.request(createRequestOptions(this._url, stream.httpHeaders), handleResponse);
     } else {
       this._request = https.request(createRequestOptions(this._url, stream.httpHeaders), handleResponse);
@@ -14351,7 +14351,7 @@ class PDFNodeStreamRangeReader extends BaseRangeReader {
 
     this._request = null;
 
-    if (this._url.protocol === "http:") {
+    if (this._url.protocol !== "https:") {
       this._request = http.request(createRequestOptions(this._url, this._httpHeaders), handleResponse);
     } else {
       this._request = https.request(createRequestOptions(this._url, this._httpHeaders), handleResponse);
